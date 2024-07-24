@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Polyline } from 'react-native-maps';
+import { Polyline } from '@react-native-oh-tpl/react-native-maps';
 import isEqual from 'lodash.isequal';
 
 const WAYPOINT_LIMIT = 10;
@@ -18,20 +18,30 @@ class MapViewDirections extends Component {
 	}
 
 	componentDidMount() {
-		this.fetchAndRenderRoute(this.props);
+		this.renderRouteBySystem(this.props);
 	}
 
 	componentDidUpdate(prevProps) {
 		if (!isEqual(prevProps.origin, this.props.origin) || !isEqual(prevProps.destination, this.props.destination) || !isEqual(prevProps.waypoints, this.props.waypoints) || !isEqual(prevProps.mode, this.props.mode) || !isEqual(prevProps.precision, this.props.precision) || !isEqual(prevProps.splitWaypoints, this.props.splitWaypoints)) {
 			if (this.props.resetOnChange === false) {
-				this.fetchAndRenderRoute(this.props);
+				this.renderRouteBySystem(this.props);
 			} else {
 				this.resetState(() => {
-					this.fetchAndRenderRoute(this.props);
+					this.renderRouteBySystem(this.props);
 				});
 			}
 		}
 	}
+
+	renderRouteBySystem = ()=> {
+		if(Platform.OS == 'harmony'){
+			this.homaryFetchAndRenderRoute(this.props)
+		}else{
+			this.fetchAndRenderRoute(this.props)
+		}
+	}
+
+
 
 	resetState = (cb = null) => {
 		this.setState({
@@ -72,6 +82,129 @@ class MapViewDirections extends Component {
 		}
 		return points;
 	}
+
+	homaryFetchAndRenderRoute = (props) => {
+		{
+			let {
+				origin: initialOrigin,
+				destination: initialDestination,
+				apikey,
+				onStart,
+				onReady,
+				onError,
+				mode = 'DRIVING',
+				language = 'en',
+				directionsServiceBaseUrl = 'https://mapapi.cloud.huawei.com/mapApi/v1/routeService/',
+			} = props; 
+			//https://mapapi.cloud.huawei.com/mapApi/v1/routeService/walking
+			//https://mapapi.cloud.huawei.com/mapApi/v1/routeService/bicycling
+			//https://mapapi.cloud.huawei.com/mapApi/v1/routeService/driving
+			if(mode=='TRANSIT'){
+				console.warn(`MapViewDirections Error: homary dones not support transit model`)
+				return;
+			}
+			if (!apikey) {
+				console.warn(`MapViewDirections Error: Missing API Key`); // eslint-disable-line no-console
+				return;
+			}
+			if (!initialOrigin || !initialDestination) {
+				return;
+			}
+			const routes = {
+				origin: initialOrigin,
+				destination: initialDestination
+			};
+			let {
+				origin,
+				destination,
+			} = routes;
+			onStart({
+				origin,
+				destination,
+			});
+			this.homaryFetchRoute(directionsServiceBaseUrl, origin, destination, apikey, mode, language)
+				.then(results => {
+					this.setState({
+						coordinates: results.coordinates,
+						distance:results.distance,
+						duration:results.duration,
+					}, function() {
+						if (onReady) {
+							onReady(results);
+						}
+					})
+				})
+				.catch(errorMessage => {
+					this.resetState();
+					console.warn(`MapViewDirections Error: ${errorMessage}`); // eslint-disable-line no-console
+					onError && onError(errorMessage);
+				});
+		}
+	
+	}
+
+	homaryFetchRoute(directionsServiceBaseUrl, origin, destination, apikey, mode, language) {
+		const typeMap = {
+			DRIVING: 'driving',
+			BICYCLING: 'bicycling',
+			WALKING: 'walking',
+		  };
+		let url = directionsServiceBaseUrl;
+		url += typeMap[mode]+'?key='+apikey;
+		const originConvert = {
+			"lng": origin.longitude,
+			"lat": origin.latitude,
+		  };
+		const destinationConvert = {
+			"lng": destination.longitude,
+			"lat": destination.latitude,
+		};
+		const params = {
+			origin: originConvert,
+			destination: destinationConvert,
+			language:language
+		};
+		// 设置 POST 请求的选项
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(params)
+		};
+		// 发起 POST 请求并处理返回的 JSON 数据
+		return fetch(url, options)
+			.then(response => response.json())
+			.then(data => {
+				if (data.returnDesc !== 'OK') {
+					const errorMessage = data.returnCode || data.returnDesc || 'Unknown error';
+					return Promise.reject(data);
+				}
+				if (data.routes.length) {
+					const distance = data.routes[0].paths[0].distance;
+					const duration = data.routes[0].paths[0].duration;
+					const polylineSteps = data.routes[0].paths[0].steps.map(step => step.polyline)
+					const originalArray = [].concat(...polylineSteps);
+					const transformedArray = originalArray.map(obj => {
+						return {
+							longitude: obj.lng,
+							latitude: obj.lat
+						};
+					});
+					return Promise.resolve({
+						distance:distance/1000,
+						duration:duration/60,
+						coordinates:transformedArray
+						}
+					)
+				}else{
+					return Promise.reject();
+				}
+		}).catch(err => {
+			return Promise.reject(`Error on GMAPS route request: ${err}`);
+		});
+	}
+
 
 	fetchAndRenderRoute = (props) => {
 
@@ -288,7 +421,7 @@ class MapViewDirections extends Component {
 	render() {
 		const { coordinates } = this.state;
 
-		if (!coordinates) {
+		if (!Platform.OS == 'harmony' && !coordinates) {
 			return null;
 		}
 
