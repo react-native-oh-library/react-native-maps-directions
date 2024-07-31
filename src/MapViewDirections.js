@@ -96,9 +96,6 @@ class MapViewDirections extends Component {
 				language = 'en',
 				directionsServiceBaseUrl = 'https://mapapi.cloud.huawei.com/mapApi/v1/routeService/',
 			} = props; 
-			//https://mapapi.cloud.huawei.com/mapApi/v1/routeService/walking
-			//https://mapapi.cloud.huawei.com/mapApi/v1/routeService/bicycling
-			//https://mapapi.cloud.huawei.com/mapApi/v1/routeService/driving
 			if(mode=='TRANSIT'){
 				console.warn(`MapViewDirections Error: homary dones not support transit model`)
 				return;
@@ -118,7 +115,7 @@ class MapViewDirections extends Component {
 				origin,
 				destination,
 			} = routes;
-			onStart({
+			onStart && onStart({
 				origin,
 				destination,
 			});
