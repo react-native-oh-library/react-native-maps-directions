@@ -35,7 +35,7 @@ class MapViewDirections extends Component {
 
 	renderRouteBySystem = ()=> {
 		if(Platform.OS == 'harmony'){
-			this.homaryFetchAndRenderRoute(this.props)
+			this.petalMapFetchAndRenderRoute(this.props)
 		}else{
 			this.fetchAndRenderRoute(this.props)
 		}
@@ -83,7 +83,7 @@ class MapViewDirections extends Component {
 		return points;
 	}
 
-	homaryFetchAndRenderRoute = (props) => {
+	petalMapFetchAndRenderRoute = (props) => {
 		{
 			let {
 				origin: initialOrigin,
@@ -119,7 +119,7 @@ class MapViewDirections extends Component {
 				origin,
 				destination,
 			});
-			this.homaryFetchRoute(directionsServiceBaseUrl, origin, destination, apikey, mode, language)
+			this.petalMapFetchRoute(directionsServiceBaseUrl, origin, destination, apikey, mode, language)
 				.then(results => {
 					this.setState({
 						coordinates: results.coordinates,
@@ -140,7 +140,7 @@ class MapViewDirections extends Component {
 	
 	}
 
-	homaryFetchRoute(directionsServiceBaseUrl, origin, destination, apikey, mode, language) {
+	petalMapFetchRoute(directionsServiceBaseUrl, origin, destination, apikey, mode, language) {
 		const typeMap = {
 			DRIVING: 'driving',
 			BICYCLING: 'bicycling',
