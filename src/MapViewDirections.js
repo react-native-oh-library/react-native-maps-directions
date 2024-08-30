@@ -97,7 +97,7 @@ class MapViewDirections extends Component {
 				directionsServiceBaseUrl = 'https://mapapi.cloud.huawei.com/mapApi/v1/routeService/',
 			} = props; 
 			if(mode=='TRANSIT'){
-				console.warn(`MapViewDirections Error: homary dones not support transit model`)
+				console.warn(`MapViewDirections Error: peta lMap dones not support transit model`)
 				return;
 			}
 			if (!apikey) {
