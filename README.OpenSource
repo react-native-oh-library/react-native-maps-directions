@@ -1,0 +1,11 @@
+[
+    {
+        "Name": "react-native-maps-directions",
+        "License": "MIT License",
+        "License File": "https://github.com/bramus/react-native-maps-directions/blob/master/LICENSE.md",
+        "Version Number": "1.9.0",
+        "Owner" : "xiafeng@huawei.com",
+        "Upstream URL": "https://github.com/bramus/react-native-maps-directions",
+        "Description": "Directions component for react-native-maps – Draw a route between two coordinates, powered by the Google Maps Directions API"
+    }
+]
