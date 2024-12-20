@@ -1,6 +1,6 @@
 {
     "name": "@react-native-oh-tpl/react-native-maps-directions",
-    "version": "1.9.0-0.0.1",
+    "version": "1.9.0-0.0.2",
     "description": "Directions Component for react-native-maps",
     "main": "index.js",
     "scripts": {
