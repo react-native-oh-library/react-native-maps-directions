@@ -424,7 +424,7 @@ class MapViewDirections extends Component {
 	render() {
 		const { coordinates } = this.state;
 
-		if (!Platform.OS == 'harmony' && !coordinates) {
+		if (!Platform.OS == 'harmony' || !coordinates) {
 			return null;
 		}
 
