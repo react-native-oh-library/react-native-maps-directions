@@ -1,6 +1,6 @@
-# @react-native-oh-tpl/react-native-maps-directions
+# @react-native-ohos/react-native-maps-directions
 
-This project is based on [react-native-maps-directions](https://github.com/bramus/react-native-maps-directions)
+This project is based on [react-native-maps-directions@1.9.0](https://github.com/bramus/react-native-maps-directions)
 
 ## Documentation URL
 
