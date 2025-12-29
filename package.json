@@ -1,6 +1,6 @@
 {
     "name": "@react-native-ohos/react-native-maps-directions",
-    "version": "1.9.0",
+    "version": "1.9.1-rc.2",
     "description": "Directions Component for react-native-maps",
     "main": "index.js",
     "scripts": {
@@ -19,7 +19,9 @@
         "react-native-maps",
         "directions",
         "google-maps",
-        "harmony"
+        "ios",
+        "android",
+	    "harmony"
     ],
     "license": "MIT",
     "bugs": {
