@@ -153,7 +153,7 @@ class MapViewDirections extends Component {
 			WALKING: 'walking',
 		  };
 		let url = directionsServiceBaseUrl;
-		url += typeMap[mode]+'?key='+encodeURIComponent(apikey);
+		url += typeMap[mode]+'?key='+apikey;
 		const originConvert = {
 			"lng": origin.longitude,
 			"lat": origin.latitude,
